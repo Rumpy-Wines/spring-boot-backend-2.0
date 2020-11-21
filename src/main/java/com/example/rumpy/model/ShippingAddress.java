@@ -2,7 +2,9 @@ package com.example.rumpy.model;
 
 import com.example.rumpy.entity_interface.HasEntityRecord;
 import com.example.rumpy.util.MyStringUtil;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -12,7 +14,9 @@ import java.util.stream.Collectors;
 
 @Entity
 @Data
-public class Address extends AddressAbstractClass implements HasEntityRecord<Address.EntityRecord>{
+@NoArgsConstructor
+@AllArgsConstructor
+public class ShippingAddress extends AddressAbstractClass implements HasEntityRecord<ShippingAddress.EntityRecord>{
 
 
     record EntityRecord (
@@ -45,7 +49,7 @@ public class Address extends AddressAbstractClass implements HasEntityRecord<Add
     ////////////////////////////////////////////////////////////////////////////////////
     //////////////////////         RELATIONSHIPS
     ////////////////////////////////////////////////////////////////////////////////////
-    @ManyToOne
+    @OneToOne
     @JoinColumn(nullable = false)
-    private User user;
+    private CustomerOrder customerOrder;
 }//end class

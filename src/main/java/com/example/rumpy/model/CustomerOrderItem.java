@@ -13,14 +13,10 @@ import java.util.Arrays;
 import java.util.List;
 
 @Data
-@Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class ProductItem extends PlatformItemAbstractClass implements HasEntityRecord<ProductItem.EntityRecord> {
-    @Column(nullable = false, columnDefinition = "TEXT")
-    private String manufacturerDescription;
-
-
+@Entity
+public class CustomerOrderItem extends PlatformItemAbstractClass implements HasEntityRecord<CustomerOrderItem.EntityRecord> {
 
     record EntityRecord(
             String id,
@@ -35,8 +31,7 @@ public class ProductItem extends PlatformItemAbstractClass implements HasEntityR
             Long pricePerItem,
             Integer numberAvailable,
             List<String> tags,
-            WineCategory category,
-            String manufacturerDescription
+            WineCategory category
     ){}
 
     @Override
@@ -55,21 +50,21 @@ public class ProductItem extends PlatformItemAbstractClass implements HasEntityR
                 this.getPricePerItem(),
                 this.getNumberAvailable(),
                 tags,
-                this.getCategory(),
-                this.getManufacturerDescription()
+                this.getCategory()
         );
     }//end method getEntityRecord
 
     ////////////////////////////////////////////////////////////////////////////////////
     //////////////////////         RELATIONSHIPS
     ////////////////////////////////////////////////////////////////////////////////////
+    @OneToOne
+    @JoinColumn(nullable = false)
+    private ProductItem productItem;
+
     @ManyToOne
     @JoinColumn(nullable = false)
-    private User user;
+    private CustomerOrder customerOrder;
 
-    @OneToMany(mappedBy = "productItem")
-    private List<ProductReview> productReviews = new ArrayList<>();
-
-    @ManyToMany(mappedBy = "cartItems")
-    private List<User> users = new ArrayList<>();
-}//end class ProductItem
+    @OneToMany(mappedBy = "customerOrderItem")
+    private List<ShippingTrackAddress> shippingAddress = new ArrayList<>();
+}//end class CustomerOrderItem

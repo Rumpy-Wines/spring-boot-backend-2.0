@@ -14,28 +14,28 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User extends RootModel implements HasEntityRecord<User.EntityRecord> {
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    @Column(name="phone_number")
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     @Enumerated(EnumType.STRING)
     private Gender gender;
 
-    @Column(name="date_of_birth")
+    @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Column(name="first_name")
+    @Column(name = "first_name")
     private String firstName;
 
-    @Column(name="last_name")
+    @Column(name = "last_name")
     private String lastName;
 
-    @Column(name="other_names")
+    @Column(name = "other_names")
     private String otherNames;
 
     record EntityRecord(
@@ -49,7 +49,8 @@ public class User extends RootModel implements HasEntityRecord<User.EntityRecord
             String firstName,
             String lastName,
             String otherNames
-    ){}
+    ) {
+    }
 
     @Override
     public EntityRecord getEntityRecord() {
@@ -78,4 +79,11 @@ public class User extends RootModel implements HasEntityRecord<User.EntityRecord
 
     @OneToMany(mappedBy = "user")
     private List<ProductReview> productReviews = new ArrayList<>();
+
+    @ManyToMany
+    @JoinTable(name = "cart_items", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "product_item_id"))
+    private List<ProductItem> cartItems = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<CustomerOrder> customerOrders = new ArrayList<>();
 }//enc class User

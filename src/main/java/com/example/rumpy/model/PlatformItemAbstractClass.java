@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Data
 @MappedSuperclass
-public abstract class PlatformItem extends RootModel {
+public abstract class PlatformItemAbstractClass extends RootModel {
     @Column(nullable = false)
     private String origin;
 
@@ -33,7 +33,7 @@ public abstract class PlatformItem extends RootModel {
     private Integer alcoholContent;
 
     @Column(nullable = false, name="price_per_item")
-    private Long pricePerItem;
+    private Long pricePerItem = 0L;
 
     @Column(nullable = false, name="numberAvailable")
     private Integer numberAvailable;
@@ -49,4 +49,4 @@ public abstract class PlatformItem extends RootModel {
         this.tags = tags.stream()
                 .collect(Collectors.joining(MyStringUtil.STRING_LIST_SEPARATOR));
     }//end method setTags
-}//end abstract class PlatformItem
+}//end abstract class PlatformItemAbstractClass

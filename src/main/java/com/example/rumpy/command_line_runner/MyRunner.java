@@ -11,11 +11,6 @@ public class MyRunner implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
 //        var user = new User();
-//        user.setId("adfasdf");
-//        user.setFirstName("David");
-//        user.setLastName("Oyinbo");
-//        user.setPhoneNumber("08094183083");
-//        log.info("User: {}", user);
 //        log.info("User Entity Record: {}", user.getEntityRecord());
     }
 }//end class MyRunner
