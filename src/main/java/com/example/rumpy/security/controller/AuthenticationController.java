@@ -177,6 +177,8 @@ public class AuthenticationController {
         user.setGender(gender);
         user.setDateOfBirth(dateOfBirth);
 
+        userService.updateUser(user);
+
         return ResponseEntity.status(HttpStatus.OK)
                 .body(user.getEntityRecord());
     }//end method setupUserData
