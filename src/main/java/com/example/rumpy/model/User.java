@@ -4,6 +4,7 @@ import com.example.rumpy.entity_interface.HasEntityRecord;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -38,19 +39,24 @@ public class User extends RootModel implements HasEntityRecord<User.EntityRecord
     @Column(name = "other_names")
     private String otherNames;
 
-    record EntityRecord(
-            String id,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt,
-            String email,
-            String phoneNumber,
-            Gender gender,
-            LocalDate dateOfBirth,
-            String firstName,
-            String lastName,
-            String otherNames
-    ) {
-    }
+    private Role role = Role.USER;
+
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class EntityRecord implements Serializable {
+        private String id;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+        private String email;
+        private String phoneNumber;
+        private Gender gender;
+        private LocalDate dateOfBirth;
+        private String firstName;
+        private String lastName;
+        private String otherNames;
+    }//end class EntityRecord
 
     @Override
     public EntityRecord getEntityRecord() {

@@ -2,6 +2,9 @@ server:
   port: 8081
 
 spring:
+  jackson:
+    default-property-inclusion: non_null
+#    serialization-inclusion: non_null
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQL10Dialect
     #    database-platform: org.hibernate.dialect.MySQL8Dialect

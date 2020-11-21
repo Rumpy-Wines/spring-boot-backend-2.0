@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 public class ShippingTrackAddress extends RootModel implements HasEntityRecord<ShippingTrackAddress.EntityRecord> {
 
     @Column(nullable = false)
-    private Integer order = 1;
+    private Integer shippingOrder = 1;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String address;
@@ -49,7 +49,7 @@ public class ShippingTrackAddress extends RootModel implements HasEntityRecord<S
                 this.getId(),
                 this.getCreatedAt(),
                 this.getCreatedAt(),
-                this.getOrder(),
+                this.getShippingOrder(),
                 this.getAddress(),
                 this.getName(),
                 this.getPhoneNumber(),
