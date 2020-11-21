@@ -3,10 +3,12 @@ package com.example.rumpy.model;
 import com.example.rumpy.entity_interface.HasEntityRecord;
 import com.example.rumpy.util.MyStringUtil;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,24 +22,26 @@ public class ProductItem extends PlatformItemAbstractClass implements HasEntityR
     @Column(nullable = false, columnDefinition = "TEXT")
     private String manufacturerDescription;
 
-
-
-    record EntityRecord(
-            String id,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt,
-            String origin,
-            String imageUrl,
-            String name,
-            String year,
-            String address,
-            Integer alcoholContent,
-            Long pricePerItem,
-            Integer numberAvailable,
-            List<String> tags,
-            WineCategory category,
-            String manufacturerDescription
-    ){}
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class EntityRecord implements Serializable {
+        private String id;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+        private String origin;
+        private String imageUrl;
+        private String name;
+        private String year;
+        private String address;
+        private Integer alcoholContent;
+        private Long pricePerItem;
+        private Integer numberAvailable;
+        private List<String> tags;
+        private WineCategory category;
+        private String manufacturerDescription;
+    }
 
     @Override
     public EntityRecord getEntityRecord() {

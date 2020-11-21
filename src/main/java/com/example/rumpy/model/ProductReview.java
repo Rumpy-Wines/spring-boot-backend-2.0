@@ -2,6 +2,7 @@ package com.example.rumpy.model;
 
 import com.example.rumpy.entity_interface.HasEntityRecord;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,6 +10,7 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Data
@@ -22,13 +24,17 @@ public class ProductReview extends RootModel implements HasEntityRecord<ProductR
     @Column(nullable = false, columnDefinition = "TEXT")
     private String reviewText;
 
-    record EntityRecord(
-            String id,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt,
-            Double rating,
-            String reviewText
-    ){}
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class EntityRecord implements Serializable {
+        private String id;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+        private Double rating;
+        private String reviewText;
+    }
 
     @Override
     public EntityRecord getEntityRecord() {

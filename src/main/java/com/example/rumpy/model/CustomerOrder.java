@@ -3,10 +3,12 @@ package com.example.rumpy.model;
 import com.example.rumpy.entity_interface.HasEntityRecord;
 import com.example.rumpy.util.MyStringUtil;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,14 +33,18 @@ public class CustomerOrder extends RootModel implements HasEntityRecord<Customer
             this.setOrderId(String.format("%s-order-%s", this.getUser().getEmail().replaceAll("\\s+", ""), MyStringUtil.generateRandom()));
     }//end method prePersist
 
-    record EntityRecord (
-            String id,
-            LocalDateTime createdAt,
-            LocalDateTime updatedAt,
-            String orderId,
-            Long price,
-            CustomerOrderStatus status
-    ){}
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @Data
+    public static class EntityRecord implements Serializable {
+        private String id;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
+        private String orderId;
+        private Long price;
+        private CustomerOrderStatus status;
+    }
 
     @Override
     public EntityRecord getEntityRecord() {

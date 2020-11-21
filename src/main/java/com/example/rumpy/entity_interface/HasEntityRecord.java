@@ -1,5 +1,7 @@
 package com.example.rumpy.entity_interface;
 
-public interface HasEntityRecord<T>{
+import java.io.Serializable;
+
+public interface HasEntityRecord<T extends Serializable>{
     T getEntityRecord();
 }//end interface HasEntityRecord
