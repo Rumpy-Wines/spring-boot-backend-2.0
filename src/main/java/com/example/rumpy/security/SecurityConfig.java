@@ -5,6 +5,7 @@ import com.example.rumpy.security.service.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -34,10 +35,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http
                 .csrf().disable()
                 .authorizeRequests()
-                .antMatchers("/api/auth/authenticate").permitAll()
-                .antMatchers("/api/auth/register").permitAll()
-                .antMatchers("/api/files/item/**").permitAll()
-                .antMatchers("/api/payment/webhook").permitAll()
+                .antMatchers(
+                        "/api/auth/authenticate",
+                        "/api/auth/register",
+                        "/api/payment/webhook"
+                ).permitAll()
+                .antMatchers(
+                        HttpMethod.GET,
+                        "/api/product-items",
+                        "/api/product-items/display-photo/**"
+                ).permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
@@ -53,7 +60,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     @Bean
-    public PasswordEncoder passwordEncoder(){
+    public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }//end method passwordEncoder
 }//end class SecurityConfig

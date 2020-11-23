@@ -1,7 +1,10 @@
 package com.example.rumpy.util;
 
+import org.springframework.stereotype.Component;
+
 import java.util.Random;
 
+@Component
 public class MyStringUtil {
     public static final String STRING_LIST_SEPARATOR = ";;";
 
