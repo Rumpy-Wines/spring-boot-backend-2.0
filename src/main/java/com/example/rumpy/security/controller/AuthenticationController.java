@@ -39,6 +39,18 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
+
+    @GetMapping("/user")
+    public ResponseEntity<?> getUser() {
+        Optional<User> authenticatedUser = userService.getAuthenticatedUser();
+
+        if (authenticatedUser.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new HashMap<>(Map.of("message", "Unauthorized")));
+
+        return ResponseEntity.ok(authenticatedUser.get().getEntityRecord());
+    }//end method getUser
+
     @PostMapping("/authenticate")
     public ResponseEntity<?> createAuthenticationToken(
             @RequestParam(name = "email") Optional<String> optionalEmail,
@@ -150,9 +162,9 @@ public class AuthenticationController {
                     .body(validationErrors);
 
         Optional<User> optionalUser = userService.getAuthenticatedUser();
-        if(optionalUser.isEmpty())
+        if (optionalUser.isEmpty())
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new HashMap(Map.of("message", "Unauthorized")));
+                    .body(new HashMap(Map.of("message", "Unauthorized")));
 
         String phoneNumber = requestMap.get("phoneNumber");
         String firstName = requestMap.get("firstName");
@@ -166,7 +178,6 @@ public class AuthenticationController {
         }
 
         LocalDate dateOfBirth = LocalDate.parse(requestMap.get("dateOfBirth"));
-
 
 
         User user = optionalUser.get();
