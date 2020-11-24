@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Entity
 @Data
@@ -58,7 +59,13 @@ public class User extends RootModel implements HasEntityRecord<User.EntityRecord
         private String otherNames;
 
         public String getName() {
-            return (firstName + " " + lastName + " " + otherNames).strip();
+            return (
+                    Optional.ofNullable(firstName).orElse("")
+                    + " " +
+                    Optional.ofNullable(lastName).orElse("")
+                    + " " +
+                    Optional.ofNullable(otherNames).orElse("")
+            ).strip();
         }//end method getName
     }//end class EntityRecord
 

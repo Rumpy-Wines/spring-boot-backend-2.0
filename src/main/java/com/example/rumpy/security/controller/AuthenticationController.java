@@ -39,6 +39,11 @@ public class AuthenticationController {
     @Autowired
     private UserService userService;
 
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(){
+        return ResponseEntity.ok("");
+    }//end method logout
+
 
     @GetMapping("/user")
     public ResponseEntity<?> getUser() {
