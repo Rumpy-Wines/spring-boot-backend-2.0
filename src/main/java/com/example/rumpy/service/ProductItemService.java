@@ -3,6 +3,7 @@ package com.example.rumpy.service;
 import com.example.rumpy.model.ProductItem;
 import com.example.rumpy.model.ProductReview;
 import com.example.rumpy.model.User;
+import com.example.rumpy.model.WineCategory;
 import com.example.rumpy.repository.ProductItemRepository;
 import com.example.rumpy.repository.ProductReviewRepository;
 import com.example.rumpy.util.FileStorageUtil;
@@ -68,4 +69,8 @@ public class ProductItemService {
 
         return productReviewRepository.save(productReview);
     }//end method giveAReview
+
+    public Page<ProductItem> findByCategory(WineCategory category, Pageable pageable) {
+        return productItemRepository.findByCategory(category, pageable);
+    }
 }//end class ProductItemService

@@ -53,6 +53,16 @@ public class ProductItemController {
         return ResponseEntity.ok(productItemEntityRecords);
     }//end method findAll
 
+    @GetMapping("/category/{category}")
+    public ResponseEntity<?> findByCategory(@PathVariable("category") WineCategory category){
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("createdAt"));
+        Page<ProductItem> productItems = productItemService.findByCategory(category, pageable);
+
+        Page<ProductItem.EntityRecord> productItemEntityRecords = productItems.map(ProductItem::getEntityRecord);
+
+        return ResponseEntity.ok(productItemEntityRecords);
+    }//end method findByCategory
+
     @GetMapping("/{id}")
     public ResponseEntity<?> findSingleProduct(@PathVariable("id") String id) {
         Optional<ProductItem> optionalProductItem = productItemService.findByIdWithReviewsAndReviewUser(id);
@@ -205,4 +215,6 @@ public class ProductItemController {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(productReview.getEntityRecord());
     }//end method giveAReview
+
+
 }//end class ProductItemController
