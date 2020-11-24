@@ -41,6 +41,8 @@ public class ProductItem extends PlatformItemAbstractClass implements HasEntityR
         private List<String> tags;
         private WineCategory category;
         private String manufacturerDescription;
+        private User.EntityRecord user;
+        private List<ProductReview.EntityRecord> productReviews;
     }
 
     @Override
@@ -60,7 +62,9 @@ public class ProductItem extends PlatformItemAbstractClass implements HasEntityR
                 this.getNumberAvailable(),
                 tags,
                 this.getCategory(),
-                this.getManufacturerDescription()
+                this.getManufacturerDescription(),
+                null,
+                null
         );
     }//end method getEntityRecord
 
@@ -71,7 +75,7 @@ public class ProductItem extends PlatformItemAbstractClass implements HasEntityR
     @JoinColumn(nullable = false)
     private User user;
 
-    @OneToMany(mappedBy = "productItem")
+    @OneToMany(mappedBy = "productItem", cascade = CascadeType.REMOVE)
     private List<ProductReview> productReviews = new ArrayList<>();
 
     @ManyToMany(mappedBy = "cartItems")

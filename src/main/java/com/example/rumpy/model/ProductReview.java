@@ -34,6 +34,8 @@ public class ProductReview extends RootModel implements HasEntityRecord<ProductR
         private LocalDateTime updatedAt;
         private Double rating;
         private String reviewText;
+        private User.EntityRecord user;
+        private ProductItem.EntityRecord productItem;
     }
 
     @Override
@@ -43,7 +45,9 @@ public class ProductReview extends RootModel implements HasEntityRecord<ProductR
                 this.getCreatedAt(),
                 this.getUpdatedAt(),
                 this.getRating(),
-                this.getReviewText()
+                this.getReviewText(),
+                null,
+                null
         );
     }//end method getEntityRecord
 

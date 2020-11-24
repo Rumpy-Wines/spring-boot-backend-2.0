@@ -1,9 +1,6 @@
 package com.example.rumpy.controller;
 
-import com.example.rumpy.model.Gender;
-import com.example.rumpy.model.ProductItem;
-import com.example.rumpy.model.User;
-import com.example.rumpy.model.WineCategory;
+import com.example.rumpy.model.*;
 import com.example.rumpy.service.ProductItemService;
 import com.example.rumpy.service.UserService;
 import com.example.rumpy.util.FileStorageUtil;
@@ -48,13 +45,40 @@ public class ProductItemController {
 
     @GetMapping
     public ResponseEntity<?> findAll() {
-        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt"));
+        Pageable pageable = PageRequest.of(0, 20, Sort.by("createdAt"));
         Page<ProductItem> productItems = productItemService.findAll(pageable);
 
         Page<ProductItem.EntityRecord> productItemEntityRecords = productItems.map(ProductItem::getEntityRecord);
 
         return ResponseEntity.ok(productItemEntityRecords);
     }//end method findAll
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> findSingleProduct(@PathVariable("id") String id) {
+        Optional<ProductItem> optionalProductItem = productItemService.findByIdWithReviewsAndReviewUser(id);
+
+        if (optionalProductItem.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new HashMap<>(Map.of("message", "The product with the id does not exist")));
+
+        ProductItem productItem = optionalProductItem.get();
+        ProductItem.EntityRecord entityRecord = productItem.getEntityRecord();
+
+        entityRecord.setUser(productItem.getUser().getEntityRecord());
+        entityRecord.setProductReviews(
+                productItem.getProductReviews().stream()
+                        .map(productReview -> {
+                            ProductReview.EntityRecord entityRecord1 = productReview.getEntityRecord();
+                            entityRecord1.setUser(productReview.getUser().getEntityRecord());
+                            return entityRecord1;
+                        })
+                        .collect(Collectors.toList())
+        );
+
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(entityRecord);
+    }//end method findSingleProduct
 
     @PostMapping
     public ResponseEntity<?> createProductItem(
@@ -86,13 +110,13 @@ public class ProductItemController {
         validateRequestParamUtil.setReferenceMap(requestMap);
         HttpErrors validationErrors = validateRequestParamUtil.validate();
 
-        if(optionalTags.isEmpty())
+        if (optionalTags.isEmpty())
             validationErrors.put("tags", "Must be an array of strings");
 
-        if(optionalDisplayPhoto.isEmpty())
+        if (optionalDisplayPhoto.isEmpty())
             validationErrors.put("image", "The image field is required");
 
-        if(validationErrors.size() > 0)
+        if (validationErrors.size() > 0)
             return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
                     .body(validationErrors);
 
@@ -112,7 +136,7 @@ public class ProductItemController {
         productItem.setName((String) requestMap.get("name"));
         productItem.setYear((String) requestMap.get("year"));
         productItem.setAddress((String) requestMap.get("address"));
-        productItem.setAlcoholContent(Integer.parseInt((String) requestMap.get("alcoholContent")) );
+        productItem.setAlcoholContent(Integer.parseInt((String) requestMap.get("alcoholContent")));
         productItem.setPricePerItem(Long.parseLong((String) requestMap.get("pricePerItem")));
         productItem.setNumberAvailable(Integer.parseInt((String) requestMap.get("numberAvailable")));
         productItem.setTags(optionalTags.get());
@@ -124,7 +148,7 @@ public class ProductItemController {
     }//end method createProductItem
 
     @GetMapping("/display-photo/{fileName}")
-    public ResponseEntity<?> renderDisplayPhoto(@PathVariable("fileName") String fileName, HttpServletRequest request){
+    public ResponseEntity<?> renderDisplayPhoto(@PathVariable("fileName") String fileName, HttpServletRequest request) {
         Resource resource = fileStorageUtil.getFileUrlResourceForItemImage(fileName);
 
         String mimeType = "*/*";
@@ -140,4 +164,45 @@ public class ProductItemController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + resource.getFilename())
                 .body(resource);
     }//end method filePath
+
+    @PostMapping("/reviews")
+    public ResponseEntity<?> giveAReview(@RequestParam Map<String, String> requestMap) {
+        Optional<User> optionalUser = userService.getAuthenticatedUser();
+
+        if (optionalUser.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new HashMap<>(Map.of("message", "Unauthorized")));
+
+        Map<String, Class<?>> requiredValues = Map.of(
+                "rating", Double.class,
+                "reviewText", String.class,
+                "productItemId", String.class
+        );
+
+        ValidateRequestParamUtil validateRequestParamUtil = ValidateRequestParamUtil
+                .forRequired(requiredValues);
+
+        validateRequestParamUtil.setReferenceMap(requestMap);
+        HttpErrors validationErrors = validateRequestParamUtil.validate();
+
+
+        if (validationErrors.size() > 0)
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body(validationErrors);
+
+        Optional<ProductItem> optionalProductItem = productItemService.findById(requestMap.get("productItemId"));
+
+        if (optionalProductItem.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new HashMap<>(Map.of("message", "The ProductItemId does not match any product")));
+
+        ProductReview productReview = new ProductReview();
+        productReview.setRating(Double.parseDouble(requestMap.get("rating")));
+        productReview.setReviewText(requestMap.get("reviewText"));
+
+        productItemService.giveAReview(productReview, optionalProductItem.get(), optionalUser.get());
+
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(productReview.getEntityRecord());
+    }//end method giveAReview
 }//end class ProductItemController
