@@ -33,7 +33,7 @@ public class CustomerOrderItem extends PlatformItemAbstractClass implements HasE
         private String name;
         private String year;
         private String address;
-        private Integer alcoholContent;
+        private Double alcoholContent;
         private Long pricePerItem;
         private Integer numberAvailable;
         private List<String> tags;

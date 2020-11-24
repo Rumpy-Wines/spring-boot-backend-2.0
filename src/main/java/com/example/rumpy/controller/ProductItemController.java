@@ -44,8 +44,8 @@ public class ProductItemController {
     private FileStorageUtil fileStorageUtil;
 
     @GetMapping
-    public ResponseEntity<?> findAll() {
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("createdAt"));
+    public ResponseEntity<?> findAll(@RequestParam("page") Optional<Integer> pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber.orElse(0), 20, Sort.by("createdAt").descending());
         Page<ProductItem> productItems = productItemService.findAll(pageable);
 
         Page<ProductItem.EntityRecord> productItemEntityRecords = productItems.map(ProductItem::getEntityRecord);
@@ -54,8 +54,8 @@ public class ProductItemController {
     }//end method findAll
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<?> findByCategory(@PathVariable("category") WineCategory category){
-        Pageable pageable = PageRequest.of(0, 20, Sort.by("createdAt"));
+    public ResponseEntity<?> findByCategory(@PathVariable("category") WineCategory category, @RequestParam("page") Optional<Integer> pageNumber) {
+        Pageable pageable = PageRequest.of(pageNumber.orElse(0), 20, Sort.by("createdAt").descending());
         Page<ProductItem> productItems = productItemService.findByCategory(category, pageable);
 
         Page<ProductItem.EntityRecord> productItemEntityRecords = productItems.map(ProductItem::getEntityRecord);
@@ -90,6 +90,28 @@ public class ProductItemController {
                 .body(entityRecord);
     }//end method findSingleProduct
 
+    @DeleteMapping
+    public ResponseEntity<?> deleteSingleProduct(@RequestParam("id") Optional<String> optionalId) {
+        HttpErrors errors = new HttpErrors();
+
+        if (optionalId.isEmpty())
+            errors.put("id", "The id field is required");
+
+        if (errors.size() > 0)
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body(errors);
+
+        Optional<ProductItem> optionalProductItem = productItemService.findById(optionalId.get());
+
+        if(optionalProductItem.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new HashMap<>(Map.of("message", "Product Item Not Found")));
+
+        productItemService.deleteById(optionalProductItem.get().getId());
+
+        return ResponseEntity.ok(new HashMap<>(Map.of("message", "Product item deleted successfully")));
+    }//end method deleteSingleProduct
+
     @PostMapping
     public ResponseEntity<?> createProductItem(
             @RequestParam Map<String, Object> requestMap,
@@ -107,7 +129,7 @@ public class ProductItemController {
                 "name", String.class,
                 "year", String.class,
                 "address", String.class,
-                "alcoholContent", Integer.class,
+                "alcoholContent", Double.class,
                 "pricePerItem", Long.class,
                 "category", WineCategory.class,
                 "manufacturerDescription", String.class,
@@ -146,7 +168,7 @@ public class ProductItemController {
         productItem.setName((String) requestMap.get("name"));
         productItem.setYear((String) requestMap.get("year"));
         productItem.setAddress((String) requestMap.get("address"));
-        productItem.setAlcoholContent(Integer.parseInt((String) requestMap.get("alcoholContent")));
+        productItem.setAlcoholContent(Double.parseDouble((String) requestMap.get("alcoholContent")));
         productItem.setPricePerItem(Long.parseLong((String) requestMap.get("pricePerItem")));
         productItem.setNumberAvailable(Integer.parseInt((String) requestMap.get("numberAvailable")));
         productItem.setTags(optionalTags.get());

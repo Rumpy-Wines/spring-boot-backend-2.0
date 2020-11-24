@@ -15,7 +15,7 @@ import java.util.Optional;
 @Repository
 public interface ProductItemRepository extends JpaRepository<ProductItem, String> {
 
-    @Query("SELECT p from ProductItem p  LEFT JOIN FETCH p.productReviews pr WHERE p.id = :id")
+    @Query("SELECT p from ProductItem p  LEFT JOIN FETCH p.productReviews pr WHERE p.id = :id ORDER BY p.createdAt, pr.createdAt DESC")
     Optional<ProductItem> findByIdWithReviewsAndReviewUser(@Param("id") String id);
 
     Page<ProductItem> findByCategory(WineCategory category, Pageable pageable);

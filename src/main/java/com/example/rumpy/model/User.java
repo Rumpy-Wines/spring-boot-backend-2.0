@@ -56,6 +56,10 @@ public class User extends RootModel implements HasEntityRecord<User.EntityRecord
         private String firstName;
         private String lastName;
         private String otherNames;
+
+        public String getName() {
+            return (firstName + " " + lastName + " " + otherNames).strip();
+        }//end method getName
     }//end class EntityRecord
 
     @Override

@@ -22,6 +22,9 @@ public class ProductItem extends PlatformItemAbstractClass implements HasEntityR
     @Column(nullable = false, columnDefinition = "TEXT")
     private String manufacturerDescription;
 
+    private Double ratingAverage = 0.0;
+    private Integer numberOfReviews = 0;
+
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
@@ -35,12 +38,14 @@ public class ProductItem extends PlatformItemAbstractClass implements HasEntityR
         private String name;
         private String year;
         private String address;
-        private Integer alcoholContent;
+        private Double alcoholContent;
         private Long pricePerItem;
         private Integer numberAvailable;
         private List<String> tags;
         private WineCategory category;
         private String manufacturerDescription;
+        private Double ratingAverage;
+        private Integer numberOfReviews;
         private User.EntityRecord user;
         private List<ProductReview.EntityRecord> productReviews;
     }
@@ -63,6 +68,8 @@ public class ProductItem extends PlatformItemAbstractClass implements HasEntityR
                 tags,
                 this.getCategory(),
                 this.getManufacturerDescription(),
+                this.getRatingAverage(),
+                this.getNumberOfReviews(),
                 null,
                 null
         );

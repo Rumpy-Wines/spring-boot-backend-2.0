@@ -30,7 +30,7 @@ public abstract class PlatformItemAbstractClass extends RootModel {
     private String address;
 
     @Column(nullable = false, name="alcohol_content")
-    private Integer alcoholContent;
+    private Double alcoholContent;
 
     @Column(nullable = false, name="price_per_item")
     private Long pricePerItem = 0L;

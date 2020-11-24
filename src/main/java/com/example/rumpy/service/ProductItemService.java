@@ -67,10 +67,21 @@ public class ProductItemService {
         productReview.setProductItem(productItem);
         productReview.setUser(user);
 
-        return productReviewRepository.save(productReview);
+        productReview = productReviewRepository.save(productReview);
+        productItem.setRatingAverage(
+                (productItem.getRatingAverage() * productItem.getNumberOfReviews() + productReview.getRating()) / (productItem.getNumberOfReviews() + 1)
+        );
+        productItem.setNumberOfReviews(productItem.getNumberOfReviews() + 1);
+        productItemRepository.save(productItem);
+
+        return productReview;
     }//end method giveAReview
 
     public Page<ProductItem> findByCategory(WineCategory category, Pageable pageable) {
         return productItemRepository.findByCategory(category, pageable);
-    }
+    }//end method findByCategory
+
+    public void deleteById(String id){
+        productItemRepository.deleteById(id);
+    }//end method deleteProductItem
 }//end class ProductItemService
