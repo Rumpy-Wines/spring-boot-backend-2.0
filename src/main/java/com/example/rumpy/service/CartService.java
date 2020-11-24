@@ -19,12 +19,16 @@ public class CartService {
         return cartItemRepository.findByUser(user);
     }//end method findAll
 
+    public Integer countByUser(User user){
+        return cartItemRepository.countByUser(user);
+    }//end method countByUser
+
     public CartItem addProductItemToCart(ProductItem productItem, User user) {
         return addProductItemToCart(productItem, user, 1);
     }//end method addProductItemToCart
 
     public CartItem addProductItemToCart(ProductItem productItem, User user, Integer itemCount) {
-        Optional<CartItem> optionalCartItem = cartItemRepository.findByProductItem(productItem);
+        Optional<CartItem> optionalCartItem = cartItemRepository.findByProductItemAndUser(productItem, user);
         CartItem cartItem = null;
 
         if(optionalCartItem.isPresent()){

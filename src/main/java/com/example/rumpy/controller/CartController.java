@@ -53,6 +53,17 @@ public class CartController {
         return ResponseEntity.ok(cartItemEntityRecords);
     }//end method findAll
 
+    @GetMapping("/count")
+    public ResponseEntity<?> countAll() {
+        Optional<User> authenticatedUser = userService.getAuthenticatedUser();
+
+        if (authenticatedUser.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new HashMap<>(Map.of("message", "Unauthorized")));
+
+        return ResponseEntity.ok(cartService.countByUser(authenticatedUser.get()));
+    }//end method countAll
+
     @PostMapping
     public ResponseEntity<?> addProductItemToCart(
             @RequestParam("productItemId") Optional<String> productItemId,
@@ -81,5 +92,5 @@ public class CartController {
         CartItem cartItem = cartService.addProductItemToCart(productItem.get(), authenticatedUser.get(), itemCount.orElse(1));
 
         return ResponseEntity.ok(cartItem.getEntityRecord());
-    }//end method findAll
+    }//end method addProductItemToCart
 }//end class CartController
