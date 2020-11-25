@@ -17,6 +17,8 @@ import java.util.stream.Collectors;
 @Entity
 @Data
 public class Address extends AddressAbstractClass implements HasEntityRecord<Address.EntityRecord>{
+    private Boolean isDefault = false;
+
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
@@ -29,13 +31,15 @@ public class Address extends AddressAbstractClass implements HasEntityRecord<Add
         private String streetAddress;
         private String state;
         private List<String> landmarks;
+        private Boolean isDefault;
+        private User.EntityRecord user;
     }
 
     @Override
     public EntityRecord getEntityRecord() {
         List<String> landmarks;
 
-        landmarks = Arrays.asList(this.landmarks.strip().split(MyStringUtil.STRING_LIST_SEPARATOR));
+        landmarks = Arrays.asList(this.getLandmarks().strip().split(MyStringUtil.STRING_LIST_SEPARATOR));
 
         return new EntityRecord(
                 this.getId(),
@@ -44,7 +48,9 @@ public class Address extends AddressAbstractClass implements HasEntityRecord<Add
                 this.getTitle(),
                 this.getStreetAddress(),
                 this.getState(),
-                landmarks
+                landmarks,
+                this.getIsDefault(),
+                null
         );
     }//end method getEntityRecord
 
