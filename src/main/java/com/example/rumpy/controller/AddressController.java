@@ -73,7 +73,8 @@ public class AddressController {
                 "title", String.class,
                 "streetAddress", String.class,
                 "state", String.class,
-                "isDefault", Boolean.class
+                "isDefault", Boolean.class,
+                "city", String.class
         );
 
         ValidateRequestParamUtil validateRequestParamUtil = ValidateRequestParamUtil.forRequired(requiredValues);
@@ -97,6 +98,7 @@ public class AddressController {
         address.setStreetAddress(requestMap.get("streetAddress"));
         address.setState(requestMap.get("state"));
         address.setLandmarks(landmarks.get());
+        address.setCity(requestMap.get("city"));
 
         address = addressService.createAddress(address, user);
 
@@ -116,7 +118,8 @@ public class AddressController {
                 "title", String.class,
                 "streetAddress", String.class,
                 "state", String.class,
-                "isDefault", Boolean.class
+                "isDefault", Boolean.class,
+                "city", String.class
         );
 
         ValidateRequestParamUtil validateRequestParamUtil = ValidateRequestParamUtil.forRequired(requiredValues);
@@ -145,6 +148,7 @@ public class AddressController {
         address.setStreetAddress(requestMap.get("streetAddress"));
         address.setState(requestMap.get("state"));
         address.setLandmarks(landmarks.get());
+        address.setCity(requestMap.get("city"));
 
         addressService.updateAddress(address, user);
         Address.EntityRecord addressEntityRecord = address.getEntityRecord();

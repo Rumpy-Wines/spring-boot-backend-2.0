@@ -22,6 +22,9 @@ public class AddressAbstractClass extends RootModel {
     private String streetAddress;
 
     @Column(nullable = false)
+    private String city;
+
+    @Column(nullable = false)
     private String state;
 
     @Column(nullable = false, columnDefinition = "TEXT")
@@ -31,4 +34,6 @@ public class AddressAbstractClass extends RootModel {
         this.landmarks = landmarks.stream()
                 .collect(Collectors.joining(MyStringUtil.STRING_LIST_SEPARATOR));
     }//end method setLandmarks
-}
+
+
+}//end class AddressAbstractClass

@@ -2,6 +2,7 @@ package com.example.rumpy.model;
 
 import com.example.rumpy.entity_interface.HasEntityRecord;
 import com.example.rumpy.util.MyStringUtil;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,10 +30,15 @@ public class Address extends AddressAbstractClass implements HasEntityRecord<Add
         private LocalDateTime updatedAt;
         private String title;
         private String streetAddress;
+        private String city;
         private String state;
         private List<String> landmarks;
         private Boolean isDefault;
         private User.EntityRecord user;
+
+        public String getAddressString() {
+            return this.getStreetAddress() + ", " + this.getCity() + ", " + this.getState() + ".";
+        }//end method getAddressString
     }
 
     @Override
@@ -47,12 +53,14 @@ public class Address extends AddressAbstractClass implements HasEntityRecord<Add
                 this.getUpdatedAt(),
                 this.getTitle(),
                 this.getStreetAddress(),
+                this.getCity(),
                 this.getState(),
                 landmarks,
                 this.getIsDefault(),
                 null
         );
     }//end method getEntityRecord
+
 
     ////////////////////////////////////////////////////////////////////////////////////
     //////////////////////         RELATIONSHIPS
