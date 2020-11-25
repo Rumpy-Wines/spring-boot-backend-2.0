@@ -1,23 +1,23 @@
 package com.example.rumpy.controller;
 
 import com.example.rumpy.model.CartItem;
+import com.example.rumpy.model.Gender;
 import com.example.rumpy.model.ProductItem;
 import com.example.rumpy.model.User;
 import com.example.rumpy.service.CartService;
 import com.example.rumpy.service.ProductItemService;
 import com.example.rumpy.service.UserService;
 import com.example.rumpy.util.HttpErrors;
+import com.example.rumpy.util.ValidateRequestParamUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.awt.print.Pageable;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -93,4 +93,79 @@ public class CartController {
 
         return ResponseEntity.ok(cartItem.getEntityRecord());
     }//end method addProductItemToCart
+
+    @PostMapping("/change-active")
+    public ResponseEntity<?> changeActiveState(
+            @RequestParam("cartItemId") Optional<String> cartItemId,
+            @RequestParam("isActive") Optional<Boolean> isActive
+    ) {
+        Optional<User> authenticatedUser = userService.getAuthenticatedUser();
+
+        if (authenticatedUser.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new HashMap<>(Map.of("message", "Unauthorized")));
+
+        HttpErrors errors = new HttpErrors();
+
+        if(cartItemId.isEmpty())
+            errors.put("cartItemId", "The 'cartItemId' field is required");
+
+        if(isActive.isEmpty())
+            errors.put("isActive", "The 'isActive' field is required");
+
+        if (errors.size() > 0)
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body(errors);
+
+        Optional<CartItem> optionalCartItem = cartService.findById(cartItemId.get());
+
+        if(optionalCartItem.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new HashMap<>(Map.of("message", "The cart item not found")));
+
+        CartItem cartItem = optionalCartItem.get();
+
+        cartItem = cartService.updateIsActive(cartItem, isActive.get(), authenticatedUser.get());
+
+        return ResponseEntity.ok(cartItem.getEntityRecord());
+    }//end method changeActiveState
+
+    @PutMapping
+    public ResponseEntity<?> updateCartItem(@RequestParam Map<String, String> requestMap){
+        Optional<User> authenticatedUser = userService.getAuthenticatedUser();
+
+        if (authenticatedUser.isEmpty())
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new HashMap<>(Map.of("message", "Unauthorized")));
+
+        Map<String, Class<?>> requiredValues = Map.of(
+                "id", String.class,
+                "isActive", Boolean.class,
+                "itemCount", Integer.class
+        );
+
+        ValidateRequestParamUtil validateRequestParamUtil = ValidateRequestParamUtil.forRequired(requiredValues);
+
+        validateRequestParamUtil.setReferenceMap(requestMap);
+        HttpErrors validationErrors = validateRequestParamUtil.validate();
+
+        if (validationErrors.size() > 0)
+            return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+                    .body(validationErrors);
+
+        CartItem cartItem = new CartItem();
+        cartItem.setId(requestMap.get("id"));
+        cartItem.setIsActive(Boolean.parseBoolean(requestMap.get("isActive")));
+        cartItem.setItemCount(Integer.parseInt(requestMap.get("itemCount")));
+
+        Optional<CartItem> optionalCartItem = cartService.findById(cartItem.getId());
+
+        if(optionalCartItem.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+            .body(new HashMap<>(Map.of("message", "THe cart item is not found")));
+
+        cartItem = cartService.updateCart(optionalCartItem.get(), cartItem, authenticatedUser.get());
+
+        return ResponseEntity.ok(cartItem.getEntityRecord());
+    }//end method updateCartItem
 }//end class CartController

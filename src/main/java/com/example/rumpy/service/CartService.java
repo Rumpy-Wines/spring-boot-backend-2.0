@@ -19,6 +19,10 @@ public class CartService {
         return cartItemRepository.findByUser(user);
     }//end method findAll
 
+    public Optional<CartItem> findById(String id){
+        return cartItemRepository.findById(id);
+    }//end method findById
+
     public Integer countByUser(User user){
         return cartItemRepository.countByUser(user);
     }//end method countByUser
@@ -47,4 +51,21 @@ public class CartService {
 
         return cartItemRepository.save(cartItem);
     }//end method addProductItemToCart
+
+    public CartItem updateIsActive(CartItem cartItem, Boolean isActive, User user){
+        if(!cartItem.getUser().getId().equals(user.getId())) return cartItem;
+
+        cartItem.setIsActive(isActive);
+        return cartItemRepository.save(cartItem);
+    }//end method updateIsActive
+
+    public CartItem updateCart(CartItem cartItem, CartItem cartItemWithUpdates, User user) {
+        cartItem.setItemCount(cartItemWithUpdates.getItemCount());
+        cartItem.setIsActive(cartItemWithUpdates.getIsActive());
+
+        if(cartItem.getItemCount() > cartItem.getProductItem().getNumberAvailable())
+            cartItem.setItemCount(cartItem.getProductItem().getNumberAvailable());
+
+        return cartItemRepository.save(cartItem);
+    }//end method updateCart
 }//end class CartService

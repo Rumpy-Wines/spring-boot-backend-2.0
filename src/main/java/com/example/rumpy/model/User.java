@@ -60,9 +60,9 @@ public class User extends RootModel implements HasEntityRecord<User.EntityRecord
 
         public String getName() {
             return (
-                    Optional.ofNullable(firstName).orElse("")
-                    + " " +
                     Optional.ofNullable(lastName).orElse("")
+                    + " " +
+                    Optional.ofNullable(firstName).orElse("")
                     + " " +
                     Optional.ofNullable(otherNames).orElse("")
             ).strip();
