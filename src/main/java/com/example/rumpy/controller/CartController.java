@@ -1,9 +1,6 @@
 package com.example.rumpy.controller;
 
-import com.example.rumpy.model.CartItem;
-import com.example.rumpy.model.Gender;
-import com.example.rumpy.model.ProductItem;
-import com.example.rumpy.model.User;
+import com.example.rumpy.model.*;
 import com.example.rumpy.service.CartService;
 import com.example.rumpy.service.ProductItemService;
 import com.example.rumpy.service.UserService;
@@ -168,4 +165,19 @@ public class CartController {
 
         return ResponseEntity.ok(cartItem.getEntityRecord());
     }//end method updateCartItem
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteAddress(@PathVariable("id") String id) {
+        User user = userService.getAuthenticatedUser().get();
+
+        Optional<CartItem> optionalCartItem = cartService.findByIdAndUser(id, user);
+
+        if (optionalCartItem.isEmpty())
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new HashMap<>(Map.of("message", "The id does not match any user cart item")));
+
+        cartService.deleteCartItem(optionalCartItem.get(), user);
+
+        return ResponseEntity.ok(new HashMap<>(Map.of("message", "Deleted")));
+    }//end method deleteAddress
 }//end class CartController

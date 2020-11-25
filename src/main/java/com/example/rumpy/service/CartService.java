@@ -23,6 +23,10 @@ public class CartService {
         return cartItemRepository.findById(id);
     }//end method findById
 
+    public Optional<CartItem> findByIdAndUser(String id, User user) {
+        return cartItemRepository.findByIdAndUser(id, user);
+    }//end method findByIdAndUser
+
     public Integer countByUser(User user){
         return cartItemRepository.countByUser(user);
     }//end method countByUser
@@ -68,4 +72,10 @@ public class CartService {
 
         return cartItemRepository.save(cartItem);
     }//end method updateCart
+
+    public void deleteCartItem(CartItem cartItem, User user) {
+        if(!cartItem.getUser().getId().equals(user.getId())) return;
+
+        cartItemRepository.delete(cartItem);
+    }//end method deleteCartItem
 }//end class CartService
