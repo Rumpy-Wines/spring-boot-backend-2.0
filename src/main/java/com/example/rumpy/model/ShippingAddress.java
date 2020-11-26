@@ -20,6 +20,20 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class ShippingAddress extends AddressAbstractClass implements HasEntityRecord<ShippingAddress.EntityRecord>{
 
+    public static ShippingAddress fromAddress(Address address) {
+        ShippingAddress shippingAddress = new ShippingAddress();
+        shippingAddress.setTitle(address.getTitle());
+        shippingAddress.setCity(address.getCity());
+        shippingAddress.setStreetAddress(address.getStreetAddress());
+        shippingAddress.setState(address.getState());
+
+        List<String> landmarks = Arrays.asList(address.getLandmarks().strip().split(MyStringUtil.STRING_LIST_SEPARATOR));
+
+        shippingAddress.setLandmarks(landmarks);
+
+        return shippingAddress;
+    }//end method convertAddressToShippingAddress
+
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor

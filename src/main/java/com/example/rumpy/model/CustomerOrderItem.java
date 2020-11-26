@@ -19,7 +19,33 @@ import java.util.List;
 @AllArgsConstructor
 @Entity
 public class CustomerOrderItem extends PlatformItemAbstractClass implements HasEntityRecord<CustomerOrderItem.EntityRecord> {
+    private Integer itemCount = 1;
 
+    public static CustomerOrderItem fromCartItem(CartItem cartItem) {
+        CustomerOrderItem customerOrderItem = CustomerOrderItem.fromProductItem(cartItem.getProductItem());
+        customerOrderItem.setItemCount(cartItem.getItemCount());
+
+        return customerOrderItem;
+    }//end method fromCartItem
+
+    public static CustomerOrderItem fromProductItem(ProductItem productItem) {
+        CustomerOrderItem customerOrderItem = new CustomerOrderItem();
+
+        customerOrderItem.setOrigin(productItem.getOrigin());
+        customerOrderItem.setImageUrl(productItem.getImageUrl());
+        customerOrderItem.setName(productItem.getName());
+        customerOrderItem.setYear(productItem.getYear());
+        customerOrderItem.setAddress(productItem.getAddress());
+        customerOrderItem.setAlcoholContent(productItem.getAlcoholContent());
+        customerOrderItem.setPricePerItem(productItem.getPricePerItem());
+        customerOrderItem.setNumberAvailable(productItem.getNumberAvailable());
+        customerOrderItem.setTags(productItem.getEntityRecord().getTags());
+        customerOrderItem.setCategory(productItem.getCategory());
+
+        customerOrderItem.setProductItem(productItem);
+
+        return customerOrderItem;
+    }//end method fromCartItem
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
@@ -38,6 +64,12 @@ public class CustomerOrderItem extends PlatformItemAbstractClass implements HasE
         private Integer numberAvailable;
         private List<String> tags;
         private WineCategory category;
+        private Integer itemCount;
+        private ProductItem.EntityRecord productItem;
+
+        public String getItemId() {
+            return "item-id-" + this.getId();
+        }
     }
 
     @Override
@@ -56,7 +88,9 @@ public class CustomerOrderItem extends PlatformItemAbstractClass implements HasE
                 this.getPricePerItem(),
                 this.getNumberAvailable(),
                 tags,
-                this.getCategory()
+                this.getCategory(),
+                this.getItemCount(),
+                this.getProductItem().getEntityRecord()
         );
     }//end method getEntityRecord
 
@@ -72,5 +106,5 @@ public class CustomerOrderItem extends PlatformItemAbstractClass implements HasE
     private CustomerOrder customerOrder;
 
     @OneToMany(mappedBy = "customerOrderItem")
-    private List<ShippingTrackAddress> shippingAddress = new ArrayList<>();
+    private List<ShippingTrackAddress> shippingTrackAddresses = new ArrayList<>();
 }//end class CustomerOrderItem

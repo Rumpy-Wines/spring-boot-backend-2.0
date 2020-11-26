@@ -19,6 +19,10 @@ public class AddressService {
 
     public List<Address> findAllByUser(User user) {
         return addressRepository.findAllByUser(user);
+    }//end method findAllByUser
+
+    public Optional<Address> findByUser(User user) {
+        return addressRepository.findByUser(user);
     }//end method findByUser
 
     public Optional<Address> findById(String id, User user){

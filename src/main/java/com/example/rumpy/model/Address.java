@@ -43,9 +43,7 @@ public class Address extends AddressAbstractClass implements HasEntityRecord<Add
 
     @Override
     public EntityRecord getEntityRecord() {
-        List<String> landmarks;
-
-        landmarks = Arrays.asList(this.getLandmarks().strip().split(MyStringUtil.STRING_LIST_SEPARATOR));
+        List<String> landmarks = Arrays.asList(this.getLandmarks().strip().split(MyStringUtil.STRING_LIST_SEPARATOR));
 
         return new EntityRecord(
                 this.getId(),

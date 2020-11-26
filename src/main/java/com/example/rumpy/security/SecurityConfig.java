@@ -47,7 +47,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .antMatchers(
                         "/api/auth/authenticate",
                         "/api/auth/register",
-                        "/api/payment/webhook"
+                        "/api/orders/webhook"
                 ).permitAll()
                 .antMatchers(
                         HttpMethod.GET,
