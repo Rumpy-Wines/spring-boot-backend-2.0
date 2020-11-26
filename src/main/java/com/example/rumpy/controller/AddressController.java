@@ -1,25 +1,22 @@
 package com.example.rumpy.controller;
 
 import com.example.rumpy.model.Address;
-import com.example.rumpy.model.Gender;
 import com.example.rumpy.model.User;
 import com.example.rumpy.service.AddressService;
 import com.example.rumpy.service.UserService;
-
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
+import com.example.rumpy.temp.ValidateRequestParamUtil;
 import com.example.rumpy.util.HttpErrors;
-import com.example.rumpy.util.ValidateRequestParamUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api/address")
@@ -77,7 +74,7 @@ public class AddressController {
                 "city", String.class
         );
 
-        ValidateRequestParamUtil validateRequestParamUtil = ValidateRequestParamUtil.forRequired(requiredValues);
+        ValidateRequestParamUtil validateRequestParamUtil = new ValidateRequestParamUtil(requiredValues);
 
         validateRequestParamUtil.setReferenceMap(requestMap);
         HttpErrors validationErrors = validateRequestParamUtil.validate();
@@ -122,7 +119,8 @@ public class AddressController {
                 "city", String.class
         );
 
-        ValidateRequestParamUtil validateRequestParamUtil = ValidateRequestParamUtil.forRequired(requiredValues);
+
+        ValidateRequestParamUtil validateRequestParamUtil = new ValidateRequestParamUtil(requiredValues);
 
         validateRequestParamUtil.setReferenceMap(requestMap);
         HttpErrors validationErrors = validateRequestParamUtil.validate();

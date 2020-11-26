@@ -109,12 +109,16 @@ public class PaystackPaymentService implements PaymentServiceInterface {
         HashMap<String, String> data = (HashMap<String, String>) responseJSON.get("data");
         String status = data.get("status");
 
-        return switch (status) {
-            case "success" -> TransactionStatus.SUCCESS;
-            case "failed" -> TransactionStatus.DECLINED;
-            case "abandoned" -> TransactionStatus.ABANDONED;
-            default -> TransactionStatus.PENDING;
-        };
+        switch (status) {
+            case "success":
+                return TransactionStatus.SUCCESS;
+            case "failed":
+                return TransactionStatus.DECLINED;
+            case "abandoned":
+                return TransactionStatus.ABANDONED;
+            default:
+                return TransactionStatus.PENDING;
+        }
     }
 
     @Override

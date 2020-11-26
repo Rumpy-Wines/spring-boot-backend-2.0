@@ -1,8 +1,10 @@
-package com.example.rumpy.util;
+package com.example.rumpy.temp;
 
+import com.example.rumpy.util.HttpErrors;
+import com.example.rumpy.util.ValidateRequestEntry;
+import com.example.rumpy.util.ValidateRequestType;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
@@ -15,44 +17,18 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Component
-@NoArgsConstructor
 public class ValidateRequestParamUtil {
-    public static enum ValidateRequestType {
-        REQUIRED
-    }
-
-    record ValidateRequestEntry(
-            String name,
-            Class<?> objectClass,
-            List<ValidateRequestType> types
-    ) {
-    }
-
     private HttpErrors errors = new HttpErrors();
     private List<ValidateRequestEntry> entries = new ArrayList<>();
     private ObjectMapper objectMapper = new ObjectMapper();
 
     private Map<String, ? extends Object> referenceMap;
 
-    public ValidateRequestParamUtil(List<ValidateRequestEntry> entries) {
-        this.entries = entries;
+    public ValidateRequestParamUtil (Map<String, Class<?>> requiredMap) {
+        this.entries = attachStringListToType(requiredMap, List.of(ValidateRequestType.REQUIRED));
     }
 
-    public <T extends Class<?>> ValidateRequestParamUtil(Map<String, List<ValidateRequestType>> entries, T objectClass) {
-        List<ValidateRequestEntry> validateRequestEntries = entries.entrySet()
-                .stream()
-                .map(entry -> {
-                    return new ValidateRequestEntry(entry.getKey(), objectClass, entry.getValue());
-                })
-                .collect(Collectors.toList());
-        this.entries = validateRequestEntries;
-    }
-
-    public static ValidateRequestParamUtil forRequired(Map<String, Class<?>> requiredMap) {
-        return new ValidateRequestParamUtil(attachStringListToType(requiredMap, List.of(ValidateRequestType.REQUIRED)));
-    }
-
-    public static List<ValidateRequestEntry> attachStringListToType
+    private List<ValidateRequestEntry> attachStringListToType
             (Map<String, Class<?>> requirementMap, List<ValidateRequestType> types) {
         return requirementMap.entrySet()
                 .stream()
@@ -76,14 +52,14 @@ public class ValidateRequestParamUtil {
                 .forEach(validateRequestEntry -> {
 
                     validateRequestEntry
-                            .types
+                            .getTypes()
                             .stream()
                             .forEach(validateRequestType -> {
                                 if (validateRequestType == ValidateRequestType.REQUIRED) {
-                                    if (!this.referenceMap.containsKey(validateRequestEntry.name)) {
+                                    if (!this.referenceMap.containsKey(validateRequestEntry.getName())) {
                                         this.errors.put(
-                                                validateRequestEntry.name,
-                                                String.format("The '%s' field is required", validateRequestEntry.name)
+                                                validateRequestEntry.getName(),
+                                                String.format("The '%s' field is required", validateRequestEntry.getName())
                                         );
                                     }
                                 }
@@ -92,23 +68,23 @@ public class ValidateRequestParamUtil {
                             });
 
                     //Check if type matches
-                    Object referenceValue = this.referenceMap.get(validateRequestEntry.name);
+                    Object referenceValue = this.referenceMap.get(validateRequestEntry.getName());
                     if (referenceValue != null) {
                         //Date Time
                         try {
-                            if (Temporal.class.isAssignableFrom(validateRequestEntry.objectClass)) {
-                                if (LocalDateTime.class.isAssignableFrom(validateRequestEntry.objectClass))
+                            if (Temporal.class.isAssignableFrom(validateRequestEntry.getObjectClass())) {
+                                if (LocalDateTime.class.isAssignableFrom(validateRequestEntry.getObjectClass()))
                                     LocalDateTime.parse((String) referenceValue);
-                                if (LocalDate.class.isAssignableFrom(validateRequestEntry.objectClass))
+                                if (LocalDate.class.isAssignableFrom(validateRequestEntry.getObjectClass()))
                                     LocalDate.parse((String) referenceValue);
                                 return;
                             }
 
-                            objectMapper.readValue(objectMapper.writeValueAsString(referenceValue), validateRequestEntry.objectClass);
+                            objectMapper.readValue(objectMapper.writeValueAsString(referenceValue), validateRequestEntry.getObjectClass());
                         } catch (JsonProcessingException | DateTimeParseException e) {
                             this.errors.put(
-                                    validateRequestEntry.name,
-                                    String.format("%s must be of type %s", validateRequestEntry.name, validateRequestEntry.objectClass.getSimpleName())
+                                    validateRequestEntry.getName(),
+                                    String.format("%s must be of type %s", validateRequestEntry.getName(), validateRequestEntry.getObjectClass().getSimpleName())
                             );
                         }
                     }
@@ -117,3 +93,4 @@ public class ValidateRequestParamUtil {
         return this.errors;
     }
 }//end method ValidateRequestParam
+

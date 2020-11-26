@@ -1,13 +1,12 @@
 package com.example.rumpy.security.controller;
 
 
-import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
 import com.example.rumpy.model.Gender;
 import com.example.rumpy.model.User;
 import com.example.rumpy.security.util.JwtUtil;
 import com.example.rumpy.service.UserService;
+import com.example.rumpy.temp.ValidateRequestParamUtil;
 import com.example.rumpy.util.HttpErrors;
-import com.example.rumpy.util.ValidateRequestParamUtil;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,7 +156,7 @@ public class AuthenticationController {
                 "dateOfBirth", LocalDate.class
         );
 
-        ValidateRequestParamUtil validateRequestParamUtil = ValidateRequestParamUtil.forRequired(requiredValues);
+        ValidateRequestParamUtil validateRequestParamUtil = new ValidateRequestParamUtil(requiredValues);
 
         validateRequestParamUtil.setReferenceMap(requestMap);
         HttpErrors validationErrors = validateRequestParamUtil.validate();

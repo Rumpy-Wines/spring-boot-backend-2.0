@@ -4,17 +4,14 @@ import com.example.rumpy.model.*;
 import com.example.rumpy.service.CartService;
 import com.example.rumpy.service.ProductItemService;
 import com.example.rumpy.service.UserService;
+import com.example.rumpy.temp.ValidateRequestParamUtil;
 import com.example.rumpy.util.HttpErrors;
-import com.example.rumpy.util.ValidateRequestParamUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.awt.print.Pageable;
-import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -141,7 +138,7 @@ public class CartController {
                 "itemCount", Integer.class
         );
 
-        ValidateRequestParamUtil validateRequestParamUtil = ValidateRequestParamUtil.forRequired(requiredValues);
+        ValidateRequestParamUtil validateRequestParamUtil = new ValidateRequestParamUtil(requiredValues);
 
         validateRequestParamUtil.setReferenceMap(requestMap);
         HttpErrors validationErrors = validateRequestParamUtil.validate();
