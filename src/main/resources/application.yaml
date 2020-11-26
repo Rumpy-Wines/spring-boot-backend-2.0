@@ -1,34 +1,8 @@
-server:
-  port: 8081
-
 spring:
   jackson:
     default-property-inclusion: non_null
-#    serialization-inclusion: non_null
-  jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
-    #    database-platform: org.hibernate.dialect.MySQL8Dialect
-    hibernate:
-      dialect: org.hibernate.dialect.PostgreSQL10Dialect
-      ddl-auto: update
-    open-in-view: false
-    properties:
-      hibernate:
-        default_schema: public
-  datasource:
-    #    url: jdbc:mysql://localhost:3306/rumpy?serverTimezone=UTC
-    #    username: root
-    #    password: ved@secret
-    url: jdbc:postgresql://localhost:5432/rumpy2?useSSL=false
-    username: postgres
-    password: ved@secret
-    driverClassName: org.postgresql.Driver
-#    maxActive: 10
-#    maxIdle: 5
-#    minIdle: 2
-#    initializeSize: 5
-#    removeAbandoned: true
-
+  profiles:
+    active: dev
 
 file:
   storage:

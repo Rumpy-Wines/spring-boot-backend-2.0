@@ -45,6 +45,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                 .csrf().disable()
                 .authorizeRequests()
                 .antMatchers(
+                        "/",
                         "/api/auth/authenticate",
                         "/api/auth/register",
                         "/api/orders/webhook"

@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 public class RumpyApplication {
@@ -19,4 +21,13 @@ public class RumpyApplication {
 //		mapper.setSerializationInclusion(JsonInclude.Include.NON_NULL);  // NON_EMPTY for '' or NULL value
 //		return mapper;
 //	}
+}
+
+// Add the controller.
+@RestController
+class HelloWorldController {
+	@GetMapping("/")
+	public String hello() {
+		return "hello world!";
+	}
 }
