@@ -5,9 +5,14 @@ spring:
       ddl-auto: update
     open-in-view: false
   datasource:
-    url: jdbc:mysql://34.65.164.242:3306/rumpy?serverTimezone=UTC
+#    url: jdbc:mysql://34.65.164.242:3306/rumpy?serverTimezone=UTC
     username: root
     password: pCztd0p9hnbHBpdK
+  cloud:
+    gcp:
+      sql:
+        database-name: rumpy
+        instance-connection-name: rumpy-296821:europe-west6:rumpy
 
 #server:
 #  port: 8081
