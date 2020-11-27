@@ -8,6 +8,7 @@ import com.example.rumpy.util.FileStorageUtil;
 import com.example.rumpy.util.HttpErrors;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -31,6 +32,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
+@NoArgsConstructor
 @RequestMapping("/api/product-items")
 public class ProductItemController {
 
@@ -40,8 +42,8 @@ public class ProductItemController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private FileStorageUtil fileStorageUtil;
+//    @Autowired
+//    private FileStorageUtil fileStorageUtil;
 
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam("page") Optional<Integer> pageNumber) {
@@ -180,6 +182,7 @@ public class ProductItemController {
 
     @GetMapping("/display-photo/{fileName}")
     public ResponseEntity<?> renderDisplayPhoto(@PathVariable("fileName") String fileName, HttpServletRequest request) {
+        FileStorageUtil fileStorageUtil = new FileStorageUtil();
         Resource resource = fileStorageUtil.getFileUrlResourceForItemImage(fileName);
 
         String mimeType = "*/*";

@@ -7,6 +7,7 @@ import com.example.rumpy.model.WineCategory;
 import com.example.rumpy.repository.ProductItemRepository;
 import com.example.rumpy.repository.ProductReviewRepository;
 import com.example.rumpy.util.FileStorageUtil;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,14 +18,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@NoArgsConstructor
 public class ProductItemService {
     public static final String STORAGE_PATH = "productItemDisplayPhotos";
 
     @Autowired
     private ProductItemRepository productItemRepository;
 
-    @Autowired
-    private FileStorageUtil fileStorageUtil;
+//    @Autowired
+//    private FileStorageUtil fileStorageUtil;
 
     @Autowired
     private ProductReviewRepository productReviewRepository;
@@ -39,6 +41,8 @@ public class ProductItemService {
 
     public ProductItem createProductItem(ProductItem productItem, MultipartFile displayPhoto, User user) {
         productItem.setUser(user);
+
+        FileStorageUtil fileStorageUtil = new FileStorageUtil();
 
         String imageUrl = productItem.getImageUrl();
         if(displayPhoto != null){

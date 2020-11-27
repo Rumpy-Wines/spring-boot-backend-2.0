@@ -4,6 +4,7 @@ import com.example.rumpy.model.CartItem;
 import com.example.rumpy.model.ProductItem;
 import com.example.rumpy.model.User;
 import com.example.rumpy.repository.CartItemRepository;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@NoArgsConstructor
 public class CartService {
     @Autowired
     private CartItemRepository cartItemRepository;

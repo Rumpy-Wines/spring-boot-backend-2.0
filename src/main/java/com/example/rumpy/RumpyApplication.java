@@ -22,12 +22,3 @@ public class RumpyApplication {
 //		return mapper;
 //	}
 }
-
-// Add the controller.
-@RestController
-class HelloWorldController {
-	@GetMapping("/")
-	public String hello() {
-		return "hello world!";
-	}
-}

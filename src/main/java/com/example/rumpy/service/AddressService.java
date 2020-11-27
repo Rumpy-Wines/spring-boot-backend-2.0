@@ -3,6 +3,7 @@ package com.example.rumpy.service;
 import com.example.rumpy.model.Address;
 import com.example.rumpy.model.User;
 import com.example.rumpy.repository.AddressRepository;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 @Service
 @Transactional
+@NoArgsConstructor
 public class AddressService {
     @Autowired
     private AddressRepository addressRepository;

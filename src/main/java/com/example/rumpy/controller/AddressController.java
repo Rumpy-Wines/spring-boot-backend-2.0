@@ -6,6 +6,7 @@ import com.example.rumpy.service.AddressService;
 import com.example.rumpy.service.UserService;
 import com.example.rumpy.temp.ValidateRequestParamUtil;
 import com.example.rumpy.util.HttpErrors;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
+@NoArgsConstructor
 @RequestMapping("/api/address")
 public class AddressController {
     @Autowired

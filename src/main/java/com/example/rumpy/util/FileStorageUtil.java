@@ -1,6 +1,7 @@
 package com.example.rumpy.util;
 
 import com.example.rumpy.service.ProductItemService;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -17,17 +18,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-@Component
+//@Service
 public class FileStorageUtil {
-    private final Path fileStoragePath;
-    private final String fileStorageLocation;
+    private Path fileStoragePath;
+
+    private String fileStorageLocation ;
 
     @Autowired
     private MyStringUtil randomStringGenerator;
 
-    public FileStorageUtil(@Value("${file.storage.location:temp}") String fileStorageLocation) {
+    public FileStorageUtil() {
+        this.fileStorageLocation = "fileStorage";
         this.fileStoragePath = Paths.get(fileStorageLocation).toAbsolutePath().normalize();
-        this.fileStorageLocation = fileStorageLocation;
 
         try {
             if (!Files.exists(fileStoragePath))
@@ -36,6 +38,7 @@ public class FileStorageUtil {
             throw new RuntimeException("Issue in creating file directory");
         }
     }// end constructor
+
 
     public String storeFile(MultipartFile file, String directory, boolean generateFileName) {
         String fileExtension = com.google.common.io.Files.getFileExtension(file.getOriginalFilename());

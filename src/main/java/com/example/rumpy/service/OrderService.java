@@ -3,6 +3,7 @@ package com.example.rumpy.service;
 import com.example.rumpy.exceptions.PaymentServiceException;
 import com.example.rumpy.model.*;
 import com.example.rumpy.repository.OrderRepository;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
+@NoArgsConstructor
 public class OrderService {
     @Autowired
     private OrderRepository orderRepository;

@@ -4,6 +4,7 @@ import com.example.rumpy.exceptions.PaymentServiceException;
 import com.example.rumpy.model.*;
 import com.example.rumpy.service.*;
 import com.example.rumpy.util.HttpErrors;
+import lombok.NoArgsConstructor;
 import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Controller
+@NoArgsConstructor
 @RequestMapping("/api/orders")
 public class OrderController {
     @Autowired

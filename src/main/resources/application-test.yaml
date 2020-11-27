@@ -8,6 +8,5 @@ spring:
     url: jdbc:mysql://34.65.164.242:3306/rumpy?serverTimezone=UTC
     username: root
     password: pCztd0p9hnbHBpdK
-
-#server:
-#  port: 8081
+server:
+  port: 8081

@@ -3,6 +3,7 @@ package com.example.rumpy.service;
 
 import com.example.rumpy.model.User;
 import com.example.rumpy.repository.UserRepository;
+import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@NoArgsConstructor
 public class UserService {
     @Autowired
     private UserRepository userRepository;

@@ -40,8 +40,8 @@ public class PaystackPaymentService implements PaymentServiceInterface {
     @Autowired
     private OrderService orderService;
 
-    public PaystackPaymentService(@Value("${paystack.secret_key}") String secretKey) {
-        this.SECRET_KEY = secretKey;
+    public PaystackPaymentService() {
+        this.SECRET_KEY = "sk_test_18d0ed8d86d0a4a48bad31d655442050e01920bc";
         webClient = WebClient.builder()
                 .baseUrl(BASE_URL)
                 .defaultHeaders(httpHeaders -> {

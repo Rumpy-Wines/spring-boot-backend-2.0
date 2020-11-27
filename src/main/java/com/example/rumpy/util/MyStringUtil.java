@@ -1,10 +1,13 @@
 package com.example.rumpy.util;
 
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.Random;
 
-@Component
+@Service
+@NoArgsConstructor
 public class MyStringUtil {
     public static final String STRING_LIST_SEPARATOR = ";;";
 
