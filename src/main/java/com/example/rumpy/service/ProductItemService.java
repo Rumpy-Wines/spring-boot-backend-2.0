@@ -25,8 +25,8 @@ public class ProductItemService {
     @Autowired
     private ProductItemRepository productItemRepository;
 
-//    @Autowired
-//    private FileStorageUtil fileStorageUtil;
+    @Autowired
+    private FileStorageUtil fileStorageUtil;
 
     @Autowired
     private ProductReviewRepository productReviewRepository;
@@ -41,8 +41,6 @@ public class ProductItemService {
 
     public ProductItem createProductItem(ProductItem productItem, MultipartFile displayPhoto, User user) {
         productItem.setUser(user);
-
-        FileStorageUtil fileStorageUtil = new FileStorageUtil();
 
         String imageUrl = productItem.getImageUrl();
         if(displayPhoto != null){

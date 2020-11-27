@@ -42,8 +42,8 @@ public class ProductItemController {
     @Autowired
     private UserService userService;
 
-//    @Autowired
-//    private FileStorageUtil fileStorageUtil;
+    @Autowired
+    private FileStorageUtil fileStorageUtil;
 
     @GetMapping
     public ResponseEntity<?> findAll(@RequestParam("page") Optional<Integer> pageNumber) {
@@ -180,24 +180,23 @@ public class ProductItemController {
         return ResponseEntity.ok(productItem.getEntityRecord());
     }//end method createProductItem
 
-    @GetMapping("/display-photo/{fileName}")
-    public ResponseEntity<?> renderDisplayPhoto(@PathVariable("fileName") String fileName, HttpServletRequest request) {
-        FileStorageUtil fileStorageUtil = new FileStorageUtil();
-        Resource resource = fileStorageUtil.getFileUrlResourceForItemImage(fileName);
-
-        String mimeType = "*/*";
-
-        try {
-            mimeType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        return ResponseEntity.ok()
-                .contentType(MediaType.valueOf(mimeType))
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + resource.getFilename())
-                .body(resource);
-    }//end method filePath
+//    @GetMapping("/display-photo/{fileName}")
+//    public ResponseEntity<?> renderDisplayPhoto(@PathVariable("fileName") String fileName, HttpServletRequest request) {
+//        Resource resource = fileStorageUtil.getFileUrlResourceForItemImage(fileName);
+//
+//        String mimeType = "*/*";
+//
+//        try {
+//            mimeType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        return ResponseEntity.ok()
+//                .contentType(MediaType.valueOf(mimeType))
+//                .header(HttpHeaders.CONTENT_DISPOSITION, "inline;filename=" + resource.getFilename())
+//                .body(resource);
+//    }//end method filePath
 
     @PostMapping("/reviews")
     public ResponseEntity<?> giveAReview(@RequestParam Map<String, String> requestMap) {

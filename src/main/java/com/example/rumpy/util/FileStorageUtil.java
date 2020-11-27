@@ -1,96 +1,81 @@
 package com.example.rumpy.util;
 
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import com.example.rumpy.property.CloudinaryProperty;
 import com.example.rumpy.service.ProductItemService;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.Map;
 
-//@Service
+@Service
+@NoArgsConstructor
 public class FileStorageUtil {
-    private Path fileStoragePath;
-
-    private String fileStorageLocation ;
-
     @Autowired
     private MyStringUtil randomStringGenerator;
 
-    public FileStorageUtil() {
-        this.fileStorageLocation = "fileStorage";
-        this.fileStoragePath = Paths.get(fileStorageLocation).toAbsolutePath().normalize();
+    @Autowired
+    private CloudinaryProperty cloudinaryProperty;
 
-        try {
-            if (!Files.exists(fileStoragePath))
-                Files.createDirectories(fileStoragePath);
-        } catch (IOException e) {
-            throw new RuntimeException("Issue in creating file directory");
-        }
-    }// end constructor
+    private Cloudinary cloudinary;
 
 
     public String storeFile(MultipartFile file, String directory, boolean generateFileName) {
-        String fileExtension = com.google.common.io.Files.getFileExtension(file.getOriginalFilename());
         directory = cleanRelativePathString(directory);
 
-        String fileName = generateFileName
-                ?
-                String.format("%s%s", randomStringGenerator.generateRandom(30), "".equals(fileExtension) ? "" : "." + fileExtension)
-                :
-                StringUtils.cleanPath(file.getOriginalFilename());
-        fileName = cleanRelativePathString(fileName);
+        String fileExtension = com.google.common.io.Files.getFileExtension(file.getOriginalFilename());
+        String fileName = randomStringGenerator.generateRandom(30);
+        String filePathString =
+                cleanRelativePathString(directory) + "/" + fileName;
 
-        Path directoryPath = Paths.get(fileStoragePath.toString()).resolve(directory);
-        Path filePath = directoryPath.resolve(fileName);
+        cloudinary = new Cloudinary(Map.of(
+                "cloud_name", cloudinaryProperty.getName(),
+                "api_key", cloudinaryProperty.getApiKey(),
+                "api_secret", cloudinaryProperty.getApiSecret()
+        ));
+
+        Map params = Map.of(
+                "public_id", filePathString,
+                "overwrite", true
+//                "resource_type", "image"
+        );
+
+        File convFile = null;
 
         try {
-            if (!Files.exists(directoryPath))
-                Files.createDirectory(directoryPath);
-
-            Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+            convFile = multipartToFile(file, fileName + ("".equals(fileExtension) ? "" : fileExtension));
         } catch (IOException e) {
             e.printStackTrace();
-            throw new RuntimeException("Issue in storing file");
         }
 
-        return cleanRelativePathString(filePath.toString().replace(fileStoragePath.toString(), ""));
-    }//end method storeFile
-
-    public Resource getFileUrlResource(String stringPath) {
-        stringPath = cleanRelativePathString(stringPath);
-        Path path = fileStoragePath.resolve(stringPath);
-
-        Resource resource = null;
-
+        Map uploadResult = null;
         try {
-            resource = new UrlResource(path.toUri());
-        } catch (MalformedURLException e) {
+            uploadResult = cloudinary.uploader().upload(convFile, params);
+        } catch (IOException e) {
             e.printStackTrace();
         }
 
-        if (resource.exists() && resource.isReadable())
-            return resource;
+        return (String) uploadResult.get("secure_url");
+    }//end method storeFile
 
-        return null;
-    }//end method getFileResource
-
-    public Resource getFileUrlResourceForItemImage(String fileName) {
-        String path = fileStoragePath.resolve(ProductItemService.STORAGE_PATH)
-                .resolve(fileName)
-                .toString()
-                .replace(fileStoragePath.toString(), "");
-        return getFileUrlResource(path);
+    private File multipartToFile(MultipartFile file, String fileName) throws IOException {
+        File convFile = new File(System.getProperty("java.io.tmpdir") + "/" +fileName);
+        file.transferTo(convFile);
+        return convFile;
     }
 
     public String cleanRelativePathString(String string) {
