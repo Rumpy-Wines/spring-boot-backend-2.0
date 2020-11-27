@@ -45,9 +45,6 @@ public class ProductItemService {
         String imageUrl = productItem.getImageUrl();
         if(displayPhoto != null){
             String fileName = fileStorageUtil.storeFile(displayPhoto, STORAGE_PATH, true);
-            String directory = fileStorageUtil.cleanRelativePathString(STORAGE_PATH);
-            fileName = fileStorageUtil.cleanRelativePathString(fileName);
-            fileName = fileStorageUtil.cleanRelativePathString(fileName.replaceFirst(directory, ""));
             productItem.setImageUrl(fileName);
         }
 
