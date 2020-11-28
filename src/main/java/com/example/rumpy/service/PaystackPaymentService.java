@@ -5,6 +5,7 @@ import com.example.rumpy.model.CustomerOrder;
 import com.example.rumpy.model.TransactionPaymentInterface;
 import com.example.rumpy.model.TransactionStatus;
 import com.example.rumpy.model.User;
+import lombok.Setter;
 import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,13 +25,17 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 @Service
+@Setter
 public class PaystackPaymentService implements PaymentServiceInterface {
     Logger logger = LoggerFactory.getLogger(PaystackPaymentService.class);
 
+
     private final String SECRET_KEY;
+
     private final String BASE_URL = "https://api.paystack.co";
     private final String INITIALIZE_TRANSACTION_URL = "/transaction/initialize";
     private final String VERIFY_TRANSACTION_URL = "/transaction/verify/{reference}";
+
 
     private final WebClient webClient;
 
@@ -40,8 +45,8 @@ public class PaystackPaymentService implements PaymentServiceInterface {
     @Autowired
     private OrderService orderService;
 
-    public PaystackPaymentService() {
-        this.SECRET_KEY = "sk_test_18d0ed8d86d0a4a48bad31d655442050e01920bc";
+    public PaystackPaymentService(@Value("${paystack.secretKey}") String secretKey) {
+        this.SECRET_KEY = secretKey;
         webClient = WebClient.builder()
                 .baseUrl(BASE_URL)
                 .defaultHeaders(httpHeaders -> {
