@@ -2,7 +2,7 @@ spring:
   jackson:
     default-property-inclusion: non_null
   profiles:
-    active: heroku
+    active: dev
 
 file:
   storage:
