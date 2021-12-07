@@ -9,7 +9,8 @@ file:
     location: fileStorage
 
 paystack:
-  secretKey: sk_test_18d0ed8d86d0a4a48bad31d655442050e01920bc
+  # secretKey: sk_test_18d0ed8d86d0a4a48bad31d655442050e01920bc
+  secretKey: sk_test_82a28a0bc2930bee80b4e801950e865ff14054c4
 
 cloudinary:
   name: dev-davexoyinbo
