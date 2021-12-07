@@ -3,10 +3,10 @@ spring:
     default-property-inclusion: non_null
   #    serialization-inclusion: non_null
   jpa:
-    database-platform: org.hibernate.dialect.PostgreSQL10Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
     #    database-platform: org.hibernate.dialect.MySQL8Dialect
     hibernate:
-      dialect: org.hibernate.dialect.PostgreSQL10Dialect
+      dialect: org.hibernate.dialect.PostgreSQLDialect
       ddl-auto: update
     open-in-view: false
     properties:
@@ -16,7 +16,7 @@ spring:
     #    url: jdbc:mysql://localhost:3306/rumpy?serverTimezone=UTC
     #    username: root
     #    password: ved@secret
-    url: jdbc:postgresql://localhost:5432/rumpy2?useSSL=false
+    url: jdbc:postgresql://localhost:5432/rumpy?useSSL=false
     username: postgres
     password: ved@secret
     driverClassName: org.postgresql.Driver
