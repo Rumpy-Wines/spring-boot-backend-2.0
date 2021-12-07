@@ -88,7 +88,7 @@ public class OrderController {
 
         User user = userService.getAuthenticatedUser().get();
 
-        Optional<Address> address = addressService.findByUser(user);
+        Optional<Address> address = addressService.findById(addressId.get(), user);
         if (address.isEmpty())
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(new HashMap<>(Map.of("message", "Address not found")));

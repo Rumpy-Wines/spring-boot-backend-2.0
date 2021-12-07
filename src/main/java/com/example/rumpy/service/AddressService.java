@@ -23,9 +23,9 @@ public class AddressService {
         return addressRepository.findAllByUser(user);
     }//end method findAllByUser
 
-    public Optional<Address> findByUser(User user) {
-        return addressRepository.findByUser(user);
-    }//end method findByUser
+//    public Optional<Address> findByUser(User user) {
+//        return addressRepository.findByUser(user);
+//    }//end method findByUser
 
     public Optional<Address> findById(String id, User user){
         return addressRepository.findByIdAndUser(id, user);
