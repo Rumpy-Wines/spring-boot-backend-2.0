@@ -48,13 +48,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
                         "/",
                         "/api/auth/authenticate",
                         "/api/auth/register",
-                        "/api/orders/webhook"
-                ).permitAll()
+                        "/api/orders/webhook")
+                .permitAll()
                 .antMatchers(
                         HttpMethod.GET,
                         "/api/product-items/**",
-                        "/api/product-items/display-photo/**"
-                ).permitAll()
+                        "/api/product-items/display-photo/**")
+                .permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
@@ -72,7 +72,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
-    }//end method passwordEncoder
+    }// end method passwordEncoder
 
     @Bean
     public FilterRegistrationBean simpleCorsFilter() {
@@ -80,7 +80,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         // *** URL below needs to match the Vue client URL and port ***
-//        config.setAllowedOrigins(List.of("http://localhost:4000"));
+        // config.setAllowedOrigins(List.of("http://localhost:4000"));
         config.setAllowedOrigins(List.of("*"));
         config.setAllowedMethods(Collections.singletonList("*"));
         config.setAllowedHeaders(Collections.singletonList("*"));
@@ -90,4 +90,4 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter implements WebM
         bean.setOrder(Ordered.HIGHEST_PRECEDENCE);
         return bean;
     }
-}//end class SecurityConfig
+}// end class SecurityConfig
