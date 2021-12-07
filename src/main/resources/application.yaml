@@ -15,7 +15,11 @@ cloudinary:
   name: dev-davexoyinbo
   apiKey: 891633153643619
   apiSecret: nG4-kt1lUn62RcfkfiX-D0sEjRI
-
+  
+java:
+  runtime:
+    version:
+      11
 
 
 
